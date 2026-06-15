@@ -17,6 +17,12 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("本站点来源于 MarkItDown 项目", html)
         self.assertIn("https://github.com/microsoft/markitdown", html)
 
+    def test_google_analytics_tag_is_present(self):
+        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-B6SVPJRB5M", html)
+        self.assertIn("gtag('config', 'G-B6SVPJRB5M');", html)
+
 
 if __name__ == "__main__":
     unittest.main()
