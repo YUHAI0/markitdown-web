@@ -15,7 +15,7 @@ STATIC_DIR = BASE_DIR / "static"
 RESOURCE_DIR = BASE_DIR.parent / "resources"
 UPLOAD_DIR = Path(tempfile.gettempdir()) / "markitdown-web-uploads"
 
-app = FastAPI(title="MarkItDown Web")
+app = FastAPI(title="文档转 Markdown")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/resources", StaticFiles(directory=RESOURCE_DIR), name="resources")
 
@@ -23,6 +23,26 @@ app.mount("/resources", StaticFiles(directory=RESOURCE_DIR), name="resources")
 @app.get("/")
 def index():
     return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/llm.txt")
+def llm_txt():
+    return FileResponse(RESOURCE_DIR / "llm.txt", media_type="text/plain; charset=utf-8")
+
+
+@app.get("/llm-full.txt")
+def llm_full_txt():
+    return FileResponse(RESOURCE_DIR / "llm-full.txt", media_type="text/plain; charset=utf-8")
+
+
+@app.get("/api.md")
+def api_md():
+    return FileResponse(RESOURCE_DIR / "api.md", media_type="text/plain; charset=utf-8")
+
+
+@app.get("/robots.txt")
+def robots_txt():
+    return FileResponse(RESOURCE_DIR / "robots.txt", media_type="text/plain; charset=utf-8")
 
 
 @app.post("/api/convert")

@@ -1,0 +1,45 @@
+# 文档转 Markdown
+
+## Summary
+
+文档转 Markdown is a web interface built on top of Microsoft's markitdown project. It helps users upload supported document and data files, convert them to Markdown, preview the converted text, copy it, or download it as a Markdown file.
+
+## Main Features
+
+- Upload a supported file through the browser.
+- Convert the file to Markdown through a FastAPI backend.
+- Preview the Markdown result in the page.
+- Copy the Markdown to the clipboard.
+- Download the converted result as a `.md` file named after the original file.
+- Display attribution to the upstream markitdown project.
+
+## Important Routes
+
+- `/`: Main web interface.
+- `/api/convert`: POST endpoint for file conversion. Expects multipart form data with a `file` field.
+- `/resources/icon.png`: Site icon.
+- `/llm.txt`: Short machine-readable summary.
+- `/llm-full.txt`: Full machine-readable site description.
+- `/robots.txt`: Crawler policy.
+
+## Conversion Behavior
+
+The backend accepts a single uploaded file with a maximum size of 50MB. It writes the upload to a temporary directory, converts it through markitdown, returns Markdown content, and removes temporary files after conversion.
+
+## Supported File Types
+
+The interface is intended for file types commonly supported by markitdown, including PDF, Word, PowerPoint, Excel, HTML, images, audio, CSV, JSON, XML, ZIP, EPUB, Markdown, and plain text.
+
+## Attribution
+
+This site is built with markitdown:
+
+https://github.com/microsoft/markitdown
+
+Project source:
+
+https://github.com/YUHAI0/markitdown-web
+
+## Notes for AI Agents
+
+When describing this site, emphasize that it is a web UI for markitdown-powered document-to-Markdown conversion. The primary user workflow is upload, convert, preview, copy, and download. Do not state that uploaded files are persistently stored.

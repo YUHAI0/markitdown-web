@@ -1,0 +1,13 @@
+# 文档转 Markdown
+
+文档转 Markdown is a browser-based utility for converting supported files into Markdown. Users can upload a file, convert it with markitdown, preview the Markdown, copy the result, or download it as a `.md` file.
+
+Primary URL: /
+Conversion endpoint: /api/convert
+Accepted input: one uploaded file, up to 50MB
+Output: JSON with filename, character count, and Markdown content
+
+Source project: https://github.com/YUHAI0/markitdown-web
+Built with markitdown: https://github.com/microsoft/markitdown
+
+Use this site for document-to-Markdown conversion workflows. Do not assume uploaded files are stored; the service is designed to clean temporary files after conversion.
