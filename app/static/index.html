@@ -14,7 +14,7 @@
 
       gtag('config', 'G-B6SVPJRB5M');
     </script>
-    <link rel="stylesheet" href="/static/styles.css?v=20260615-2">
+    <link rel="stylesheet" href="/static/styles.css?v=20260615-4">
   </head>
   <body>
     <main class="shell">
@@ -73,15 +73,34 @@
               <p class="result-meta" id="result-meta">暂无内容</p>
             </div>
             <div class="output-actions">
+              <div class="view-toggle" role="group" aria-label="结果显示模式">
+                <button class="view-toggle-button is-active" id="raw-view-button" type="button" data-view="raw" aria-pressed="true">
+                  原始
+                </button>
+                <button class="view-toggle-button" id="preview-view-button" type="button" data-view="preview" aria-pressed="false">
+                  查看
+                </button>
+              </div>
               <button class="secondary-button" id="download-button" type="button" disabled>
                 下载 .md
               </button>
-              <button class="copy-button" id="copy-button" type="button" disabled>
-                复制
-              </button>
+              <span class="copy-action">
+                <button class="copy-button" id="copy-button" type="button" disabled>
+                  复制
+                </button>
+                <span class="copy-toast" id="copy-toast" role="status" aria-live="polite" aria-hidden="true">已复制</span>
+              </span>
+            </div>
+            <div class="conversion-progress" id="conversion-progress" role="progressbar" aria-label="解析进度" aria-hidden="true">
+              <span></span>
             </div>
           </div>
-          <textarea id="markdown-output" spellcheck="false" readonly placeholder="转换后的 Markdown 会显示在这里。"></textarea>
+          <div class="output-body">
+            <textarea id="markdown-output" spellcheck="false" readonly placeholder="转换后的 Markdown 会显示在这里。"></textarea>
+            <article class="markdown-preview" id="markdown-preview" hidden aria-live="polite">
+              <p class="preview-placeholder">转换后的 Markdown 会在这里以阅读格式显示。</p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -100,6 +119,8 @@
       </footer>
     </main>
 
-    <script src="/static/app.js?v=20260615-2"></script>
+    <script src="/static/vendor/marked.min.js?v=12.0.2"></script>
+    <script src="/static/vendor/purify.min.js?v=3.1.6"></script>
+    <script src="/static/app.js?v=20260615-4"></script>
   </body>
 </html>

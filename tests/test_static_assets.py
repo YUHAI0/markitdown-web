@@ -1,8 +1,24 @@
 import unittest
+import re
 from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def css_block(css, selector):
+    match = re.search(rf"(?m)^{re.escape(selector)}\s*\{{(?P<body>.*?)\n\}}", css, re.S)
+    if not match:
+        raise AssertionError(f"{selector} block should exist")
+    return match.group("body")
+
+
+def css_blocks_containing(css, selector):
+    return [
+        match.group("body")
+        for match in re.finditer(r"(?m)^[^{]+\{\s*(?P<body>.*?)\n\}", css, re.S)
+        if selector in match.group(0).split("{", 1)[0]
+    ]
 
 
 class StaticAssetTests(unittest.TestCase):
@@ -39,6 +55,69 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn('<p class="eyebrow">Document to Markdown</p>', html)
         self.assertIn(f'<h1 id="page-title">{chinese_title}</h1>', html)
         self.assertNotIn("markitdown Web", html)
+
+    def test_result_panel_has_raw_and_preview_modes(self):
+        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('id="raw-view-button"', html)
+        self.assertIn('data-view="raw"', html)
+        self.assertIn('id="raw-view-button" type="button" data-view="raw" aria-pressed="true"', html)
+        self.assertIn('id="preview-view-button"', html)
+        self.assertIn('data-view="preview"', html)
+        self.assertIn('id="preview-view-button" type="button" data-view="preview" aria-pressed="false"', html)
+        self.assertIn('id="markdown-output" spellcheck="false" readonly', html)
+        self.assertIn('id="markdown-preview" hidden aria-live="polite"', html)
+        self.assertIn("/static/vendor/marked.min.js", html)
+        self.assertIn("/static/vendor/purify.min.js", html)
+
+    def test_status_text_is_visually_hidden(self):
+        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+
+        status_css = css_block(css, ".status")
+
+        self.assertIn("position: absolute;", status_css)
+        self.assertIn("clip-path: inset(50%);", status_css)
+
+    def test_preview_scrolls_inside_fixed_result_body(self):
+        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+        workspace_css = css_block(css, ".workspace")
+        output_body_css = css_block(css, ".output-body")
+        output_panel_blocks = "\n".join(css_blocks_containing(css, ".output-panel"))
+        markdown_preview_blocks = "\n".join(css_blocks_containing(css, ".markdown-preview"))
+
+        self.assertIn("height: 100%;", workspace_css)
+        self.assertIn("grid-template-rows: auto minmax(0, 1fr);", output_panel_blocks)
+        self.assertIn("overflow: hidden;", output_panel_blocks)
+        self.assertIn("overflow: hidden;", output_body_css)
+        self.assertIn("contain: size layout;", output_body_css)
+        self.assertIn("height: 100%;", markdown_preview_blocks)
+        self.assertIn("overflow: auto;", markdown_preview_blocks)
+
+    def test_result_panel_has_conversion_progress_bar(self):
+        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+        js = (PROJECT_ROOT / "app" / "static" / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn('id="conversion-progress"', html)
+        self.assertIn('role="progressbar"', html)
+        self.assertIn('aria-label="\u89e3\u6790\u8fdb\u5ea6"', html)
+        self.assertIn(".conversion-progress.is-active", css)
+        self.assertIn("@keyframes progress-slide", css)
+        self.assertIn("setProgress(true)", js)
+        self.assertIn("setProgress(false)", js)
+
+    def test_copy_button_has_toast_feedback(self):
+        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+        js = (PROJECT_ROOT / "app" / "static" / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn('id="copy-toast"', html)
+        self.assertIn('role="status"', html)
+        self.assertIn("\u5df2\u590d\u5236", html)
+        self.assertIn(".copy-toast", css)
+        self.assertIn(".copy-toast.is-visible", css)
+        self.assertIn("showCopyToast()", js)
+        self.assertIn("copyToastTimer", js)
 
     def test_site_icon_uses_resource_icon(self):
         html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")

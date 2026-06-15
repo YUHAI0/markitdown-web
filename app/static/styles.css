@@ -160,6 +160,7 @@ h1 {
   gap: 22px;
   align-items: stretch;
   min-height: 0;
+  height: 100%;
 }
 
 .upload-panel,
@@ -310,7 +311,12 @@ h1 {
 }
 
 .status {
-  min-height: 2.6em;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .status.is-error {
@@ -331,6 +337,7 @@ h1 {
 }
 
 .output-toolbar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -341,10 +348,87 @@ h1 {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 }
 
+.conversion-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease-out;
+}
+
+.conversion-progress span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 38%;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 18px oklch(46% 0.095 150 / 0.42);
+  transform: translateX(-105%);
+}
+
+.conversion-progress.is-active {
+  opacity: 1;
+}
+
+.conversion-progress.is-active span {
+  animation: progress-slide 1.05s ease-in-out infinite;
+}
+
+@keyframes progress-slide {
+  0% {
+    transform: translateX(-105%);
+  }
+
+  52% {
+    transform: translateX(120%);
+  }
+
+  100% {
+    transform: translateX(265%);
+  }
+}
+
 .output-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.view-toggle {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: oklch(99% 0.008 86 / 0.62);
+}
+
+.view-toggle-button {
+  min-width: 56px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 740;
+  transition: background 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.view-toggle-button:hover {
+  color: var(--ink);
+}
+
+.view-toggle-button.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 8px 16px oklch(24% 0.018 70 / 0.14);
 }
 
 .copy-button,
@@ -361,13 +445,70 @@ h1 {
   background: oklch(96% 0.018 82);
 }
 
-#markdown-output {
+.copy-action {
+  position: relative;
+  display: inline-flex;
+}
+
+.copy-toast {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 9px);
+  min-width: 70px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: oklch(99% 0.008 86 / 0.94);
+  box-shadow: 0 12px 24px oklch(24% 0.018 70 / 0.16);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 740;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  transform: translateY(5px);
+  transition: opacity 160ms ease-out, transform 160ms ease-out;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.copy-toast::after {
+  position: absolute;
+  right: 20px;
+  bottom: -5px;
+  width: 9px;
+  height: 9px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: inherit;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.copy-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.output-body {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  contain: size layout;
+}
+
+#markdown-output,
+.markdown-preview {
   width: 100%;
   min-height: 0;
   height: 100%;
-  resize: none;
   border: 0;
   padding: 24px 28px;
+}
+
+#markdown-output {
+  resize: none;
   background:
     linear-gradient(transparent 31px, oklch(83% 0.018 80 / 0.42) 32px) 0 0 / 100% 32px,
     var(--paper);
@@ -380,6 +521,111 @@ h1 {
 
 #markdown-output::placeholder {
   color: var(--soft);
+}
+
+.markdown-preview {
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.72;
+}
+
+.markdown-preview > *:first-child {
+  margin-top: 0;
+}
+
+.markdown-preview > *:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3 {
+  margin: 1.2em 0 0.45em;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
+  line-height: 1.18;
+}
+
+.markdown-preview h1 {
+  font-size: 1.8rem;
+}
+
+.markdown-preview h2 {
+  font-size: 1.35rem;
+}
+
+.markdown-preview h3 {
+  font-size: 1.08rem;
+}
+
+.markdown-preview p,
+.markdown-preview ul,
+.markdown-preview ol,
+.markdown-preview blockquote,
+.markdown-preview pre,
+.markdown-preview table {
+  margin: 0 0 1em;
+}
+
+.markdown-preview a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.markdown-preview code {
+  padding: 0.12em 0.32em;
+  border-radius: 5px;
+  background: oklch(93.5% 0.025 78);
+  font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.markdown-preview pre {
+  overflow: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: oklch(96% 0.018 82);
+}
+
+.markdown-preview pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.markdown-preview blockquote {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: oklch(98% 0.012 86);
+  color: var(--muted);
+}
+
+.markdown-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown-preview th {
+  background: oklch(96% 0.018 82);
+}
+
+.preview-placeholder {
+  color: var(--soft);
+  font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
 }
 
 .site-footer {
@@ -499,9 +745,17 @@ h1 {
     grid-template-rows: auto minmax(340px, 1fr);
   }
 
-  #markdown-output {
+  .output-actions {
+    justify-content: flex-start;
+  }
+
+  #markdown-output,
+  .markdown-preview {
     min-height: 340px;
     padding: 20px;
+  }
+
+  #markdown-output {
     background:
       linear-gradient(transparent 31px, oklch(83% 0.018 80 / 0.42) 32px) 0 0 / 100% 32px,
       var(--paper);
@@ -511,7 +765,8 @@ h1 {
 @media (pointer: coarse) {
   .primary-button,
   .copy-button,
-  .secondary-button {
+  .secondary-button,
+  .view-toggle {
     min-height: 48px;
   }
 }
