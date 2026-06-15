@@ -116,6 +116,8 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("\u5df2\u590d\u5236", html)
         self.assertIn(".copy-toast", css)
         self.assertIn(".copy-toast.is-visible", css)
+        self.assertIn("top: calc(100% + 9px);", css)
+        self.assertIn("top: -5px;", css)
         self.assertIn("showCopyToast()", js)
         self.assertIn("copyToastTimer", js)
 

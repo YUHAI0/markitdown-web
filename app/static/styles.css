@@ -453,7 +453,7 @@ h1 {
 .copy-toast {
   position: absolute;
   right: 0;
-  bottom: calc(100% + 9px);
+  top: calc(100% + 9px);
   min-width: 70px;
   padding: 7px 10px;
   border: 1px solid var(--line);
@@ -476,11 +476,11 @@ h1 {
 .copy-toast::after {
   position: absolute;
   right: 20px;
-  bottom: -5px;
+  top: -5px;
   width: 9px;
   height: 9px;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  border-top: 1px solid var(--line);
   background: inherit;
   content: "";
   transform: rotate(45deg);
