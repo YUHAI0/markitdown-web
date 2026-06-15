@@ -17,6 +17,13 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("\u672c\u7ad9\u70b9\u6765\u6e90\u4e8e markitdown \u9879\u76ee", html)
         self.assertIn("https://github.com/microsoft/markitdown", html)
 
+    def test_footer_links_to_api_document_with_agent_hint(self):
+        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('href="/api.md"', html)
+        self.assertIn("\u53ef\u4ee5\u628a /api.md \u53d1\u7ed9 Agent", html)
+        self.assertIn("Agent", html)
+
     def test_google_analytics_tag_is_present(self):
         html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
 
