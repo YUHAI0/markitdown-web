@@ -1,0 +1,6 @@
+.tmp-tests/
+.uploads/
+__pycache__/
+*.pyc
+
+.vercel
