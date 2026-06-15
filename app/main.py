@@ -12,10 +12,12 @@ from .conversion import ConversionError, convert_file_to_markdown, save_upload_b
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
+RESOURCE_DIR = BASE_DIR.parent / "resources"
 UPLOAD_DIR = Path(tempfile.gettempdir()) / "markitdown-web-uploads"
 
 app = FastAPI(title="MarkItDown Web")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/resources", StaticFiles(directory=RESOURCE_DIR), name="resources")
 
 
 @app.get("/")
