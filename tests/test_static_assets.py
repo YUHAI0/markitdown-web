@@ -54,19 +54,16 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-B6SVPJRB5M", html)
         self.assertIn("gtag('config', 'G-B6SVPJRB5M');", html)
 
-    def test_google_adsense_tag_and_topbar_ad_are_present(self):
+    def test_google_adsense_script_is_present_without_layout_placeholder(self):
         html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
         css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
 
         self.assertIn("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2123583038977344", html)
         self.assertIn("crossorigin=\"anonymous\"", html)
-        self.assertIn('class="topbar-ad"', html)
-        self.assertIn('class="adsbygoogle topbar-adsense"', html)
-        self.assertIn('data-ad-client="ca-pub-2123583038977344"', html)
-        self.assertIn('data-ad-format="auto"', html)
-        self.assertIn("(adsbygoogle = window.adsbygoogle || []).push({});", html)
-        self.assertIn(".topbar-ad", css)
-        self.assertIn("width: min(320px, 30vw);", css)
+        self.assertNotIn('class="topbar-ad"', html)
+        self.assertNotIn('class="adsbygoogle topbar-adsense"', html)
+        self.assertNotIn("(adsbygoogle = window.adsbygoogle || []).push({});", html)
+        self.assertNotIn(".topbar-ad", css)
 
     def test_homepage_uses_chinese_document_title_and_heading(self):
         html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
