@@ -26,7 +26,12 @@
         <span class="brand-name">markitdown</span>
       </a>
       <nav class="topbar-meta" aria-label="辅助导航">
-        <a class="api-link" href="/api.md" aria-describedby="api-agent-hint">API 文档</a>
+        <span class="api-link-wrap topbar-api">
+          <a class="api-link" href="/api.md" aria-describedby="api-agent-hint">API 文档</a>
+          <span class="api-hint" id="api-agent-hint" role="tooltip">
+            可以把 /api.md 发给 Agent，让它按文档调用转换 API。
+          </span>
+        </span>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换主题">
           <span class="icon-sun" aria-hidden="true">☀</span>
           <span class="icon-moon" aria-hidden="true">☾</span>
@@ -123,13 +128,6 @@
       <a href="https://github.com/microsoft/markitdown" target="_blank" rel="noreferrer">
         microsoft/markitdown
       </a>
-      <span class="footer-divider" aria-hidden="true">·</span>
-      <span class="api-link-wrap">
-        <a class="api-link" href="/api.md" aria-describedby="api-agent-hint">API 文档</a>
-        <span class="api-hint" id="api-agent-hint" role="tooltip">
-          可以把 /api.md 发给 Agent，让它按文档调用转换 API。
-        </span>
-      </span>
     </footer>
   </div>
 

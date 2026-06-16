@@ -771,7 +771,7 @@ h1 {
 .api-hint {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 10px);
+  top: calc(100% + 10px);
   z-index: 2;
   width: min(280px, calc(100vw - 40px));
   padding: var(--s-2) var(--s-3);
@@ -792,19 +792,33 @@ h1 {
 .api-hint::after {
   position: absolute;
   left: 50%;
-  top: 100%;
+  bottom: 100%;
   width: 9px;
   height: 9px;
-  border-right: var(--b-thin) solid var(--ink);
-  border-bottom: var(--b-thin) solid var(--ink);
+  border-left: var(--b-thin) solid var(--ink);
+  border-top: var(--b-thin) solid var(--ink);
   background: var(--accent);
   content: "";
-  transform: translate(-50%, -5px) rotate(45deg);
+  transform: translate(-50%, 5px) rotate(45deg);
 }
 .api-link-wrap:hover .api-hint,
 .api-link-wrap:focus-within .api-hint {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+.topbar-api .api-hint {
+  right: 0;
+  left: auto;
+  transform: translate(0, 4px);
+}
+.topbar-api .api-hint::after {
+  left: auto;
+  right: 22px;
+  transform: translate(0, 5px) rotate(45deg);
+}
+.topbar-api:hover .api-hint,
+.topbar-api:focus-within .api-hint {
+  transform: translate(0, 0);
 }
 @media (min-width: 961px) {
   .page {
