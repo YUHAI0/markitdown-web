@@ -927,9 +927,6 @@ h1 {
   }
 }
 @media (min-width: 961px) and (max-height: 760px) {
-  .topbar-ad {
-    display: none;
-  }
   .page {
     grid-template-rows: auto auto minmax(230px, 1fr) auto;
   }
