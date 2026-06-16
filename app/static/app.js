@@ -43,9 +43,6 @@ function setStoredTheme(value) {
 function resolveInitialTheme() {
   const stored = getStoredTheme();
   if (stored === "light" || stored === "dark") return stored;
-  if (typeof window !== "undefined" && window.matchMedia) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
   return "light";
 }
 
@@ -309,18 +306,7 @@ if (hasDocument) {
     });
   }
 
-  if (window.matchMedia) {
-    const mql = window.matchMedia("(prefers-color-scheme: dark)");
-    const onSystemThemeChange = (event) => {
-      if (getStoredTheme()) return;
-      applyTheme(event.matches ? "dark" : "light");
-    };
-    if (mql.addEventListener) {
-      mql.addEventListener("change", onSystemThemeChange);
-    } else if (mql.addListener) {
-      mql.addListener(onSystemThemeChange);
-    }
-  }
+
 
   fileInput.addEventListener("change", () => {
     setSelectedFile(fileInput.files[0] || null);

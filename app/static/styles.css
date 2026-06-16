@@ -24,19 +24,6 @@
   --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, "Noto Sans SC", monospace;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ink: oklch(94% 0.005 90);
-    --paper: oklch(16% 0.005 270);
-    --paper-2: oklch(20% 0.005 270);
-    --mute: oklch(68% 0.005 270);
-    --line: oklch(28% 0.005 270);
-    --line-strong: oklch(45% 0.005 270);
-    --accent: oklch(85% 0.15 95);
-    --accent-ink: oklch(16% 0.005 270);
-    color-scheme: dark;
-  }
-}
 :root[data-theme="dark"] {
   --ink: oklch(94% 0.005 90);
   --paper: oklch(16% 0.005 270);
@@ -105,10 +92,10 @@ a:hover {
 .page {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: var(--s-6) 0 var(--s-7);
+  padding: var(--s-4) 0 var(--s-5);
   display: flex;
   flex-direction: column;
-  gap: var(--s-6);
+  gap: var(--s-4);
 }
 .topbar {
   display: flex;
@@ -153,7 +140,7 @@ a:hover {
 .meta-link {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
+  min-height: 30px;
   padding: 0 var(--s-3);
   border: var(--b-thin) solid var(--line);
   border-radius: 0;
@@ -205,7 +192,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
-  max-width: 64ch;
+  max-width: 72ch;
 }
 .eyebrow,
 .panel-label,
@@ -229,7 +216,7 @@ a:hover {
 h1 {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(2rem, 2.2vw + 1rem, 2.6rem);
+  font-size: clamp(1.65rem, 1.6vw + 0.9rem, 2.15rem);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -237,9 +224,9 @@ h1 {
 .summary {
   color: var(--mute);
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: 0.94rem;
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.48;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -265,8 +252,8 @@ h1 {
 }
 .workspace {
   display: grid;
-  grid-template-columns: 340px minmax(0, 1fr);
-  gap: var(--s-5);
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: var(--s-4);
   align-items: stretch;
   min-height: 0;
   height: 100%;
@@ -275,7 +262,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  padding: var(--s-5);
+  padding: var(--s-4);
   border: var(--b-thin) solid var(--line);
   border-radius: 0;
   background: var(--paper);
@@ -307,8 +294,8 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: var(--s-3);
-  min-height: 220px;
-  padding: var(--s-6) var(--s-4);
+  min-height: 150px;
+  padding: var(--s-4) var(--s-3);
   border: var(--b-thin) dashed var(--line-strong);
   border-radius: 0;
   background: var(--paper-2);
@@ -342,8 +329,8 @@ h1 {
 .dropzone-icon {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border: var(--b-thin) solid var(--line-strong);
   border-radius: 0;
   color: var(--ink);
@@ -361,7 +348,7 @@ h1 {
 }
 .dropzone-title {
   color: var(--ink);
-  font-size: 1rem;
+  font-size: 0.94rem;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -377,7 +364,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
   border: var(--b-thin) solid var(--line);
   border-radius: 0;
   background: var(--paper-2);
@@ -400,7 +387,7 @@ h1 {
 .primary-button,
 .copy-button,
 .secondary-button {
-  min-height: 44px;
+  min-height: 38px;
   padding: 0 var(--s-4);
   border: var(--b-thin) solid var(--ink);
   border-radius: 0;
@@ -471,7 +458,7 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: var(--s-4);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
   border-bottom: var(--b-hair) solid var(--line);
   background: var(--paper-2);
   font-family: var(--font-sans);
@@ -535,7 +522,7 @@ h1 {
 }
 .view-toggle {
   display: inline-flex;
-  min-height: 36px;
+  min-height: 30px;
   padding: 0;
   border: var(--b-thin) solid var(--line-strong);
   border-radius: 0;
@@ -543,7 +530,7 @@ h1 {
 }
 .view-toggle-button {
   min-width: 64px;
-  min-height: 32px;
+  min-height: 30px;
   padding: 0 var(--s-3);
   border: 0;
   background: transparent;
@@ -616,7 +603,7 @@ h1 {
   height: 100%;
   overflow: auto;
   border: 0;
-  padding: var(--s-6) var(--s-6);
+  padding: var(--s-4) var(--s-5);
   background: var(--paper);
   color: var(--ink);
 }
@@ -696,7 +683,7 @@ h1 {
 }
 .markdown-preview pre {
   overflow: auto;
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
   border: var(--b-thin) solid var(--line);
   background: var(--paper-2);
 }
@@ -708,7 +695,7 @@ h1 {
 }
 .markdown-preview blockquote {
   margin: 1.2em 0;
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
   border-left: 3px solid var(--ink);
   background: var(--paper-2);
   color: var(--mute);
@@ -818,6 +805,41 @@ h1 {
 .api-link-wrap:focus-within .api-hint {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+@media (min-width: 961px) {
+  .page {
+    min-height: 100vh;
+  }
+  .intro {
+    gap: 8px;
+  }
+  .summary {
+    max-width: 78ch;
+  }
+  .format-list {
+    margin-top: 0;
+  }
+  .upload-panel {
+    gap: 12px;
+  }
+  .dropzone-title {
+    font-size: 0.94rem;
+  }
+  .dropzone-help,
+  .panel-caption {
+    font-size: 0.8rem;
+  }
+  .output-panel {
+    min-height: min(58vh, 500px);
+  }
+  #markdown-output,
+  .markdown-preview {
+    min-height: 0;
+  }
+  .site-footer {
+    margin-top: 0;
+    padding-top: 14px;
+  }
 }
 @media (max-width: 960px) {
   .page {
