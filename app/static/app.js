@@ -15,11 +15,57 @@ const fileMeta = hasDocument ? document.querySelector("#file-meta") : null;
 const fileName = hasDocument ? document.querySelector("#file-name") : null;
 const fileSize = hasDocument ? document.querySelector("#file-size") : null;
 const resultMeta = hasDocument ? document.querySelector("#result-meta") : null;
+const themeToggle = hasDocument ? document.querySelector("#theme-toggle") : null;
 
 let selectedFile = null;
 let currentMarkdown = "";
 let activeView = "raw";
 let copyToastTimer = null;
+
+const THEME_KEY = "markitdown-web:theme";
+
+function getStoredTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function setStoredTheme(value) {
+  try {
+    localStorage.setItem(THEME_KEY, value);
+  } catch {
+    /* storage may be blocked; ignore */
+  }
+}
+
+function resolveInitialTheme() {
+  const stored = getStoredTheme();
+  if (stored === "light" || stored === "dark") return stored;
+  if (typeof window !== "undefined" && window.matchMedia) {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  return "light";
+}
+
+function applyTheme(theme) {
+  if (!hasDocument) return;
+  const root = document.documentElement;
+  if (theme === "dark") {
+    root.setAttribute("data-theme", "dark");
+  } else if (theme === "light") {
+    root.setAttribute("data-theme", "light");
+  } else {
+    root.removeAttribute("data-theme");
+  }
+  if (themeToggle) {
+    themeToggle.setAttribute(
+      "aria-label",
+      theme === "dark" ? "切换到浅色主题" : "切换到深色主题"
+    );
+  }
+}
 
 function markdownDownloadName(filename) {
   const fallback = "converted.md";
@@ -185,7 +231,7 @@ async function convertSelectedFile() {
   convertButton.disabled = true;
   copyButton.disabled = true;
   downloadButton.disabled = true;
-  convertButton.textContent = "转换中...";
+  convertButton.textContent = "转换中…";
   output.value = "";
   resultMeta.textContent = "正在处理";
   setProgress(true);
@@ -250,6 +296,32 @@ function downloadMarkdown() {
 }
 
 if (hasDocument) {
+  // Theme bootstrap (sync before paint to avoid flash)
+  applyTheme(resolveInitialTheme());
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme") ||
+        (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      const next = current === "dark" ? "light" : "dark";
+      applyTheme(next);
+      setStoredTheme(next);
+    });
+  }
+
+  if (window.matchMedia) {
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const onSystemThemeChange = (event) => {
+      if (getStoredTheme()) return;
+      applyTheme(event.matches ? "dark" : "light");
+    };
+    if (mql.addEventListener) {
+      mql.addEventListener("change", onSystemThemeChange);
+    } else if (mql.addListener) {
+      mql.addListener(onSystemThemeChange);
+    }
+  }
+
   fileInput.addEventListener("change", () => {
     setSelectedFile(fileInput.files[0] || null);
   });
@@ -283,5 +355,11 @@ if (hasDocument) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { markdownDownloadName, renderMarkdownPreview, showCopyToast };
+  module.exports = {
+    markdownDownloadName,
+    renderMarkdownPreview,
+    showCopyToast,
+    resolveInitialTheme,
+    applyTheme,
+  };
 }

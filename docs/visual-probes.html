@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>markitdown-web · 视觉方向样张</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap">
+  <style>
+    :root { --probe-bg: oklch(96% 0.005 250); --probe-ink: oklch(20% 0.02 270); --probe-mute: oklch(50% 0.02 270); --probe-line: oklch(85% 0.01 270); }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--probe-bg); color: var(--probe-ink); font-family: "Inter", -apple-system, "Segoe UI", "Noto Sans SC", system-ui, sans-serif; line-height: 1.5; }
+    .frame { max-width: 1480px; margin: 0 auto; padding: 36px 24px 80px; }
+    .top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--probe-line); margin-bottom: 28px; }
+    .top h1 { margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.02em; }
+    .top p { margin: 0; color: var(--probe-mute); font-size: 0.88rem; }
+    .probes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    @media (max-width: 1100px) { .probes { grid-template-columns: 1fr; } }
+    .probe { display: flex; flex-direction: column; gap: 18px; padding: 24px; border: 1px solid var(--probe-line); border-radius: 12px; background: #fff; }
+    .probe-head { display: flex; flex-direction: column; gap: 4px; padding-bottom: 14px; border-bottom: 1px solid var(--probe-line); }
+    .probe-id { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .probe-title { font-size: 1.45rem; font-weight: 700; line-height: 1.15; margin: 0; }
+    .probe-summary { margin: 4px 0 0; font-size: 0.88rem; color: var(--probe-mute); }
+    .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; font-size: 0.78rem; margin: 0; }
+    .meta-row dt { color: var(--probe-mute); font-weight: 500; }
+    .meta-row dd { margin: 0; font-weight: 600; }
+    .swatches { display: flex; gap: 6px; }
+    .swatch { flex: 1; height: 56px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.06); position: relative; }
+    .swatch span { position: absolute; left: 6px; bottom: 4px; font-size: 0.62rem; font-weight: 600; font-family: ui-monospace, monospace; mix-blend-mode: difference; color: white; letter-spacing: 0.04em; }
+    .chip { display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 16px; border: 1px solid transparent; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--ink, #111); color: var(--paper, #fff); }
+    .btn-ghost { background: transparent; border-color: var(--line, #ddd); color: var(--ink, #111); }
+    .seg { display: inline-flex; padding: 3px; border: 1px solid var(--line, #ddd); border-radius: 8px; }
+    .seg button { height: 30px; padding: 0 12px; border: 0; background: transparent; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: var(--mute, #777); }
+    .seg button.is-on { background: var(--ink, #111); color: var(--paper, #fff); }
+    .zone { display: grid; place-items: center; gap: 10px; padding: 22px; border: 1px dashed var(--line, #ccc); border-radius: 10px; text-align: center; }
+    .zone-icon { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid var(--line, #ccc); border-radius: 8px; }
+    .zone-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .zone-title { font-size: 0.92rem; font-weight: 700; }
+    .zone-help { font-size: 0.78rem; color: var(--mute, #888); }
+    .panel { border: 1px solid var(--line, #ddd); border-radius: 10px; background: var(--paper, #fff); overflow: hidden; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--line, #eee); background: var(--paper-2, #fafafa); }
+    .panel-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .panel-meta { font-size: 0.78rem; color: var(--mute, #888); }
+    .panel-body { padding: 14px; font-size: 0.82rem; line-height: 1.6; max-height: 220px; overflow: auto; }
+    .panel-body pre { margin: 0; font-family: ui-monospace, monospace; font-size: 0.78rem; white-space: pre; }
+    .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+
+    .probe--a { --ink: oklch(24% 0.02 160); --paper: oklch(98.5% 0.012 95); --paper-2: oklch(96% 0.018 95); --mute: oklch(48% 0.02 90); --line: oklch(86% 0.025 90); --accent: oklch(48% 0.09 165); --accent-soft: oklch(92% 0.05 165); background: var(--paper); }
+    .probe--a .probe-id, .probe--a .panel-label { color: var(--accent); }
+    .probe--a .probe-title { font-family: "Spectral", "Noto Serif SC", Georgia, serif; font-weight: 600; font-size: 1.6rem; }
+    .probe--a .probe-summary { font-family: "Spectral", "Noto Serif SC", Georgia, serif; font-style: italic; }
+    .probe--a .body-serif { font-family: "Spectral", "Noto Serif SC", Georgia, serif; }
+    .probe--a .zone { background: linear-gradient(180deg, var(--paper-2), var(--accent-soft)); }
+    .probe--a .btn-primary { background: var(--ink); }
+    .probe--a .seg button.is-on { background: var(--accent); }
+    .probe--a .seg { border-color: var(--accent); }
+    .probe--a .panel-head { background: var(--paper-2); }
+    .probe--a .chip { color: var(--accent); }
+    .probe--a .zone-title { font-family: "Spectral", "Noto Serif SC", Georgia, serif; }
+
+    .probe--b { --ink: oklch(18% 0.02 270); --paper: oklch(99% 0.003 270); --paper-2: oklch(96% 0.01 270); --mute: oklch(48% 0.02 270); --line: oklch(88% 0.012 270); --accent: oklch(54% 0.16 285); --accent-soft: oklch(94% 0.04 285); background: var(--paper); }
+    .probe--b .probe-id, .probe--b .panel-label { color: var(--accent); }
+    .probe--b .probe-title { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 600; font-size: 1.4rem; }
+    .probe--b .probe-summary { font-family: "Geist", system-ui, sans-serif; }
+    .probe--b .body-mono { font-family: "Geist Mono", ui-monospace, monospace; }
+    .probe--b .zone { background: var(--paper-2); border-style: solid; }
+    .probe--b .zone-title { font-family: "Geist Mono", ui-monospace, monospace; font-size: 0.85rem; }
+    .probe--b .zone-help { font-family: "Geist Mono", ui-monospace, monospace; }
+    .probe--b .btn-primary { background: var(--accent); }
+    .probe--b .seg button.is-on { background: var(--accent); }
+    .probe--b .panel-head { background: var(--paper-2); }
+    .probe--b .chip { color: var(--accent); }
+    .probe--b .panel-body { font-family: "Geist Mono", ui-monospace, monospace; font-size: 0.76rem; }
+
+    .probe--c { --ink: oklch(20% 0.01 40); --paper: oklch(99% 0.003 60); --paper-2: oklch(96% 0.012 40); --mute: oklch(46% 0.02 40); --line: oklch(88% 0.015 40); --accent: oklch(52% 0.16 35); --accent-soft: oklch(94% 0.05 35); background: var(--paper); }
+    .probe--c .probe-id, .probe--c .panel-label { color: var(--accent); }
+    .probe--c .probe-title { font-family: "Inter", sans-serif; font-weight: 800; font-size: 1.55rem; letter-spacing: -0.02em; }
+    .probe--c .probe-summary { font-weight: 500; }
+    .probe--c .body-sans { font-family: "Inter", sans-serif; }
+    .probe--c .zone { background: var(--paper); border: 1.5px solid var(--ink); border-radius: 0; }
+    .probe--c .zone-icon { border-radius: 0; }
+    .probe--c .btn-primary { background: var(--accent); border-radius: 0; }
+    .probe--c .btn-ghost { border-radius: 0; }
+    .probe--c .seg { border-radius: 0; }
+    .probe--c .seg button { border-radius: 0; }
+    .probe--c .seg button.is-on { background: var(--accent); }
+    .probe--c .panel { border-radius: 0; }
+    .probe--c .panel-head { background: var(--ink); color: var(--paper); }
+    .probe--c .panel-head .panel-meta { color: oklch(75% 0.02 40); }
+    .probe--c .panel-head .panel-label { color: var(--paper); }
+    .probe--c .chip { color: var(--accent); border-radius: 0; }
+    .probe--c .zone-title { font-weight: 800; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="top">
+      <h1>markitdown-web · 视觉方向样张</h1>
+      <p>3 个方向并排 · 真实字体 + 真实色板 · 选中后我会用此风格落成全站</p>
+    </div>
+    <div class="probes">
+      <article class="probe probe--a" id="probe-a">
+        <header class="probe-head">
+          <span class="probe-id">方向 A · 推荐</span>
+          <h2 class="probe-title">苔绿 · 编辑式</h2>
+          <p class="probe-summary">暖纸白上的衬线大标题，苔绿贯穿 CTA / 激活态 / 焦点环；阅读 Markdown 时像翻一本排过版的书。</p>
+        </header>
+        <dl class="meta-row">
+          <div><dt>策略</dt><dd>Committed</dd></div>
+          <div><dt>主色</dt><dd>oklch(48% 0.09 165)</dd></div>
+          <div><dt>主字体</dt><dd>Spectral / Noto Serif SC</dd></div>
+          <div><dt>次字体</dt><dd>Inter / Noto Sans SC</dd></div>
+          <div><dt>主题</dt><dd>亮色（+ 深色）</dd></div>
+          <div><dt>角色</dt><dd>出版级文档工具</dd></div>
+        </dl>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">色板</p>
+          <div class="swatches">
+            <div class="swatch" style="background: oklch(48% 0.09 165);"><span>accent</span></div>
+            <div class="swatch" style="background: oklch(24% 0.02 160);"><span>ink</span></div>
+            <div class="swatch" style="background: oklch(98.5% 0.012 95);"><span>paper</span></div>
+            <div class="swatch" style="background: oklch(96% 0.018 95);"><span>paper-2</span></div>
+            <div class="swatch" style="background: oklch(86% 0.025 90);"><span>line</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">类型样本</p>
+          <div class="stack">
+            <div class="body-serif" style="font-size: 1.3rem; line-height: 1.2; font-weight: 600;">文档转 Markdown</div>
+            <div class="body-serif" style="font-size: 0.95rem; font-style: italic; color: var(--mute);">把 PDF、Office、HTML 整理成结构清晰的 Markdown。</div>
+            <div class="row" style="margin-top: 4px;">
+              <span class="chip">PDF</span><span class="chip">DOCX</span><span class="chip">PPTX</span><span class="chip">XLSX</span><span class="chip">HTML</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">上传区</p>
+          <div class="zone">
+            <div class="zone-icon" style="color: var(--accent);">
+              <svg viewBox="0 0 24 24"><path d="M12 4v11"></path><path d="M7 9l5-5 5 5"></path><path d="M5 16v2.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V16"></path></svg>
+            </div>
+            <div class="zone-title">选择文件或拖到这</div>
+            <div class="zone-help">单文件最大 50MB · 转换后立即清理</div>
+          </div>
+          <div class="row" style="margin-top: 10px;">
+            <button class="btn btn-primary">转换为 Markdown</button>
+            <button class="btn btn-ghost">下载 .md</button>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">结果区</p>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-label">整理后</div>
+                <div class="panel-meta">2,481 字符</div>
+              </div>
+              <div class="row">
+                <div class="seg"><button>原始</button><button class="is-on">查看</button></div>
+                <button class="btn btn-ghost">复制</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <span class="body-serif" style="font-weight: 700; font-size: 1.05rem; display: block; margin-bottom: 6px;">会议纪要 · 2026-06-12</span>
+              <span>讨论了新一季产品路线图，明确三个交付节点……</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="probe probe--b" id="probe-b">
+        <header class="probe-head">
+          <span class="probe-id">方向 B</span>
+          <h2 class="probe-title">靛蓝 · 等宽极简</h2>
+          <p class="probe-summary">全等宽标签的工程感，靛蓝主色贯穿焦点 / 激活 / 进度；空状态像 IDE 一样安静、可读。</p>
+        </header>
+        <dl class="meta-row">
+          <div><dt>策略</dt><dd>Committed</dd></div>
+          <div><dt>主色</dt><dd>oklch(54% 0.16 285)</dd></div>
+          <div><dt>主字体</dt><dd>Geist Mono</dd></div>
+          <div><dt>次字体</dt><dd>Geist</dd></div>
+          <div><dt>主题</dt><dd>亮色（+ 深色）</dd></div>
+          <div><dt>角色</dt><dd>开发者向文档工具</dd></div>
+        </dl>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">色板</p>
+          <div class="swatches">
+            <div class="swatch" style="background: oklch(54% 0.16 285);"><span>accent</span></div>
+            <div class="swatch" style="background: oklch(18% 0.02 270);"><span>ink</span></div>
+            <div class="swatch" style="background: oklch(99% 0.003 270);"><span>paper</span></div>
+            <div class="swatch" style="background: oklch(96% 0.01 270);"><span>paper-2</span></div>
+            <div class="swatch" style="background: oklch(88% 0.012 270);"><span>line</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">类型样本</p>
+          <div class="stack">
+            <div class="body-mono" style="font-size: 1.25rem; line-height: 1.25; font-weight: 600;">文档 → Markdown</div>
+            <div class="body-mono" style="font-size: 0.85rem; color: var(--mute);">// pdf / office / html → 结构化文本</div>
+            <div class="row" style="margin-top: 4px;">
+              <span class="chip">pdf</span><span class="chip">docx</span><span class="chip">pptx</span><span class="chip">xlsx</span><span class="chip">html</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">上传区</p>
+          <div class="zone">
+            <div class="zone-icon" style="color: var(--accent);">
+              <svg viewBox="0 0 24 24"><path d="M12 4v11"></path><path d="M7 9l5-5 5 5"></path><path d="M5 16v2.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V16"></path></svg>
+            </div>
+            <div class="zone-title">drop file or click</div>
+            <div class="zone-help">// max 50MB · tmp cleared after</div>
+          </div>
+          <div class="row" style="margin-top: 10px;">
+            <button class="btn btn-primary">convert → .md</button>
+            <button class="btn btn-ghost">download</button>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">结果区</p>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-label">output</div>
+                <div class="panel-meta">2,481 chars</div>
+              </div>
+              <div class="row">
+                <div class="seg"><button>raw</button><button class="is-on">view</button></div>
+                <button class="btn btn-ghost">copy</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <pre># Meeting Notes · 2026-06-12
+
+## Agenda
+- Q3 roadmap
+- Three milestones
+- Handoff plan</pre>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="probe probe--c" id="probe-c">
+        <header class="probe-head">
+          <span class="probe-id">方向 C</span>
+          <h2 class="probe-title">印泥红 · 瑞士网格</h2>
+          <p class="probe-summary">零圆角、强字重、印泥红作唯一强调色；标题用紧凑无衬线压满版心，硬朗得不像普通 Web 工具。</p>
+        </header>
+        <dl class="meta-row">
+          <div><dt>策略</dt><dd>Committed</dd></div>
+          <div><dt>主色</dt><dd>oklch(52% 0.16 35)</dd></div>
+          <div><dt>主字体</dt><dd>Inter (800/600)</dd></div>
+          <div><dt>次字体</dt><dd>Inter (400/500)</dd></div>
+          <div><dt>主题</dt><dd>亮色（+ 深色）</dd></div>
+          <div><dt>角色</dt><dd>视觉强烈的工具</dd></div>
+        </dl>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">色板</p>
+          <div class="swatches">
+            <div class="swatch" style="background: oklch(52% 0.16 35);"><span>accent</span></div>
+            <div class="swatch" style="background: oklch(20% 0.01 40);"><span>ink</span></div>
+            <div class="swatch" style="background: oklch(99% 0.003 60);"><span>paper</span></div>
+            <div class="swatch" style="background: oklch(96% 0.012 40);"><span>paper-2</span></div>
+            <div class="swatch" style="background: oklch(88% 0.015 40);"><span>line</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">类型样本</p>
+          <div class="stack">
+            <div class="body-sans" style="font-size: 1.45rem; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em;">文档转<br>Markdown。</div>
+            <div class="body-sans" style="font-size: 0.92rem; color: var(--mute); font-weight: 500;">PDF · Office · HTML → 干净的结构化文本。</div>
+            <div class="row" style="margin-top: 4px;">
+              <span class="chip">PDF</span><span class="chip">DOCX</span><span class="chip">PPTX</span><span class="chip">XLSX</span><span class="chip">HTML</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">上传区</p>
+          <div class="zone">
+            <div class="zone-icon" style="color: var(--accent);">
+              <svg viewBox="0 0 24 24"><path d="M12 4v11"></path><path d="M7 9l5-5 5 5"></path><path d="M5 16v2.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V16"></path></svg>
+            </div>
+            <div class="zone-title">拖入或选择文件</div>
+            <div class="zone-help">单文件 ≤ 50MB · 处理后立即删除</div>
+          </div>
+          <div class="row" style="margin-top: 10px;">
+            <button class="btn btn-primary">开始转换</button>
+            <button class="btn btn-ghost">下载 .md</button>
+          </div>
+        </div>
+        <div>
+          <p class="panel-label" style="margin: 0 0 6px;">结果区</p>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-label">结果</div>
+                <div class="panel-meta">2,481 字符</div>
+              </div>
+              <div class="row">
+                <div class="seg"><button>原始</button><button class="is-on">查看</button></div>
+                <button class="btn btn-ghost">复制</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <span class="body-sans" style="font-weight: 800; font-size: 1.05rem; display: block; margin-bottom: 6px;">会议纪要 · 2026-06-12</span>
+              <span>讨论了新一季产品路线图，明确三个交付节点……</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p style="margin-top: 28px; color: var(--probe-mute); font-size: 0.85rem; line-height: 1.55;">
+      怎么用：在浏览器里看 A / B / C 三张样张的差异（颜色、字体、气压感、按钮态度）。告诉我 "<b>A</b>" / "<b>B</b>" / "<b>C</b>"，或者 "<b>取 A 的色 + C 的字重</b>" 这类组合指令，我会照此把所有页面与 CSS 落定。
+    </p>
+  </div>
+</body>
+</html>

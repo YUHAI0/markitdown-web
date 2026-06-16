@@ -1,126 +1,140 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>文档转 Markdown</title>
-    <link rel="icon" type="image/png" href="/resources/icon.png">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B6SVPJRB5M"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>文档转 Markdown</title>
+  <link rel="icon" type="image/png" href="/resources/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B6SVPJRB5M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-      gtag('config', 'G-B6SVPJRB5M');
-    </script>
-    <link rel="stylesheet" href="/static/styles.css?v=20260615-4">
-  </head>
-  <body>
-    <main class="shell">
-      <section class="intro" aria-labelledby="page-title">
-        <div>
-          <p class="eyebrow">Document to Markdown</p>
-          <h1 id="page-title">文档转 Markdown</h1>
-        </div>
-        <p class="summary">像整理桌面文件一样上传文档，自动抽取内容并整理成 Markdown。适合处理 PDF、Office、HTML、表格、结构化数据和文本素材。</p>
-        <div class="format-strip" aria-label="支持的文件类型">
-          <span>PDF</span>
-          <span>DOCX</span>
-          <span>PPTX</span>
-          <span>XLSX</span>
-          <span>HTML</span>
-          <span>JSON</span>
-          <span>ZIP</span>
-        </div>
-      </section>
+    gtag('config', 'G-B6SVPJRB5M');
+  </script>
+  <link rel="stylesheet" href="/static/styles.css?v=20260616-1">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="topbar-brand" href="/">
+        <span class="brand-mark" aria-hidden="true">¶</span>
+        <span class="brand-name">markitdown</span>
+      </a>
+      <nav class="topbar-meta" aria-label="辅助导航">
+        <a class="api-link" href="/api.md" aria-describedby="api-agent-hint">API 文档</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换主题">
+          <span class="icon-sun" aria-hidden="true">☀</span>
+          <span class="icon-moon" aria-hidden="true">☾</span>
+        </button>
+      </nav>
+    </header>
 
-      <section class="workspace" aria-label="转换工具">
-        <div class="upload-panel">
-          <div class="panel-heading">
-            <p class="panel-label">文件托盘</p>
-            <p class="panel-caption">上传后立即转换，不保留原文件。</p>
-          </div>
-          <label class="dropzone" id="dropzone">
-            <input id="file-input" type="file" aria-describedby="file-help">
-            <span class="dropzone-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" role="img">
-                <path d="M12 4v11"></path>
-                <path d="M7 9l5-5 5 5"></path>
-                <path d="M5 16v2.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V16"></path>
-              </svg>
-            </span>
-            <span class="dropzone-title">选择文件或拖到这里</span>
-            <span class="dropzone-help" id="file-help">单个文件最大 50MB。文件不会保存，转换完成后立即清理。</span>
-          </label>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Document to Markdown</p>
+      <h1 id="page-title">文档转 Markdown</h1>
+      <p class="summary">把 PDF、Office、HTML、表格、结构化数据、文本整理成干净的 Markdown，供阅读、复制、二次编辑或交给 LLM。</p>
+      <div class="format-list" aria-label="支持的文件类型">
+        <span>PDF</span>
+        <span>DOCX</span>
+        <span>PPTX</span>
+        <span>XLSX</span>
+        <span>HTML</span>
+        <span>JSON</span>
+        <span>ZIP</span>
+      </div>
+    </section>
 
-          <div class="file-meta" id="file-meta" hidden>
-            <span id="file-name"></span>
-            <span id="file-size"></span>
-          </div>
-
-          <button class="primary-button" id="convert-button" type="button" disabled>
-            转换为 Markdown
-          </button>
-
-          <p class="status" id="status" role="status" aria-live="polite">等待上传文件。</p>
-        </div>
-
-        <div class="output-panel">
-          <div class="output-toolbar">
-            <div>
-              <p class="panel-label">整理稿</p>
-              <p class="result-meta" id="result-meta">暂无内容</p>
-            </div>
-            <div class="output-actions">
-              <div class="view-toggle" role="group" aria-label="结果显示模式">
-                <button class="view-toggle-button is-active" id="raw-view-button" type="button" data-view="raw" aria-pressed="true">
-                  原始
-                </button>
-                <button class="view-toggle-button" id="preview-view-button" type="button" data-view="preview" aria-pressed="false">
-                  查看
-                </button>
-              </div>
-              <button class="secondary-button" id="download-button" type="button" disabled>
-                下载 .md
-              </button>
-              <span class="copy-action">
-                <button class="copy-button" id="copy-button" type="button" disabled>
-                  复制
-                </button>
-                <span class="copy-toast" id="copy-toast" role="status" aria-live="polite" aria-hidden="true">已复制</span>
-              </span>
-            </div>
-            <div class="conversion-progress" id="conversion-progress" role="progressbar" aria-label="解析进度" aria-hidden="true">
-              <span></span>
-            </div>
-          </div>
-          <div class="output-body">
-            <textarea id="markdown-output" spellcheck="false" readonly placeholder="转换后的 Markdown 会显示在这里。"></textarea>
-            <article class="markdown-preview" id="markdown-preview" hidden aria-live="polite">
-              <p class="preview-placeholder">转换后的 Markdown 会在这里以阅读格式显示。</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <footer class="site-footer">
-        <span>本站点来源于 markitdown 项目</span>
-        <a href="https://github.com/microsoft/markitdown" target="_blank" rel="noreferrer">
-          microsoft/markitdown
-        </a>
-        <span class="footer-divider" aria-hidden="true">/</span>
-        <span class="api-link-wrap">
-          <a class="api-link" href="/api.md" aria-describedby="api-agent-hint">API 文档</a>
-          <span class="api-hint" id="api-agent-hint" role="tooltip">
-            可以把 /api.md 发给 Agent，让它按文档调用转换 API。
+    <section class="workspace" aria-label="转换工具">
+      <div class="upload-panel">
+        <header class="panel-head">
+          <p class="panel-label">文件</p>
+          <p class="panel-caption">上传后立即转换，不保存原文件。</p>
+        </header>
+        <label class="dropzone" id="dropzone">
+          <input id="file-input" type="file" aria-describedby="file-help">
+          <span class="dropzone-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <path d="M12 4v11"></path>
+              <path d="M7 9l5-5 5 5"></path>
+              <path d="M5 16v2.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V16"></path>
+            </svg>
           </span>
-        </span>
-      </footer>
-    </main>
+          <span class="dropzone-title">选择文件或拖到这</span>
+          <span class="dropzone-help" id="file-help">单文件最大 50MB · 完成后立即清理</span>
+        </label>
 
-    <script src="/static/vendor/marked.min.js?v=12.0.2"></script>
-    <script src="/static/vendor/purify.min.js?v=3.1.6"></script>
-    <script src="/static/app.js?v=20260615-4"></script>
-  </body>
+        <div class="file-meta" id="file-meta" hidden>
+          <span id="file-name"></span>
+          <span id="file-size"></span>
+        </div>
+
+        <button class="primary-button" id="convert-button" type="button" disabled>
+          转换为 Markdown
+        </button>
+
+        <p class="status" id="status" role="status" aria-live="polite">等待上传文件。</p>
+      </div>
+
+      <div class="output-panel">
+        <div class="output-toolbar">
+          <div>
+            <p class="panel-label">整理后</p>
+            <p class="result-meta" id="result-meta">暂无内容</p>
+          </div>
+          <div class="output-actions">
+            <div class="view-toggle" role="group" aria-label="结果显示模式">
+              <button class="view-toggle-button is-active" id="raw-view-button" type="button" data-view="raw" aria-pressed="true">
+                原始
+              </button>
+              <button class="view-toggle-button" id="preview-view-button" type="button" data-view="preview" aria-pressed="false">
+                查看
+              </button>
+            </div>
+            <button class="secondary-button" id="download-button" type="button" disabled>
+              下载 .md
+            </button>
+            <span class="copy-action">
+              <button class="copy-button" id="copy-button" type="button" disabled>
+                复制
+              </button>
+              <span class="copy-toast" id="copy-toast" role="status" aria-live="polite" aria-hidden="true">已复制</span>
+            </span>
+          </div>
+          <div class="conversion-progress" id="conversion-progress" role="progressbar" aria-label="解析进度" aria-hidden="true">
+            <span></span>
+          </div>
+        </div>
+        <div class="output-body">
+          <textarea id="markdown-output" spellcheck="false" readonly placeholder="转换后的 Markdown 会显示在这里。"></textarea>
+          <article class="markdown-preview" id="markdown-preview" hidden aria-live="polite">
+            <p class="preview-placeholder">转换后的 Markdown 会在这里以阅读格式显示。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>本站点来源于 markitdown 项目</span>
+      <a href="https://github.com/microsoft/markitdown" target="_blank" rel="noreferrer">
+        microsoft/markitdown
+      </a>
+      <span class="footer-divider" aria-hidden="true">·</span>
+      <span class="api-link-wrap">
+        <a class="api-link" href="/api.md" aria-describedby="api-agent-hint">API 文档</a>
+        <span class="api-hint" id="api-agent-hint" role="tooltip">
+          可以把 /api.md 发给 Agent，让它按文档调用转换 API。
+        </span>
+      </span>
+    </footer>
+  </div>
+
+  <script src="/static/vendor/marked.min.js?v=12.0.2"></script>
+  <script src="/static/vendor/purify.min.js?v=3.1.6"></script>
+  <script src="/static/app.js?v=20260616-1"></script>
+</body>
 </html>
