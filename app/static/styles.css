@@ -98,9 +98,9 @@ a:hover {
   gap: var(--s-4);
 }
 .topbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
   gap: var(--s-4);
 }
 .topbar-brand {
@@ -135,6 +135,18 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: var(--s-3);
+}
+.topbar-ad {
+  justify-self: end;
+  width: min(320px, 30vw);
+  min-width: 220px;
+  height: 50px;
+  overflow: hidden;
+}
+.topbar-adsense {
+  display: block;
+  width: 100%;
+  height: 50px;
 }
 .api-link,
 .meta-link {
@@ -821,6 +833,9 @@ h1 {
   transform: translate(0, 0);
 }
 @media (min-width: 961px) {
+  .topbar {
+    grid-template-columns: auto minmax(220px, 1fr) auto;
+  }
   .page {
     min-height: 100vh;
     min-height: 100dvh;
@@ -945,6 +960,12 @@ h1 {
   }
 }
 @media (max-width: 960px) {
+  .topbar {
+    display: flex;
+  }
+  .topbar-ad {
+    display: none;
+  }
   .page {
     width: calc(100% - 24px);
     padding: var(--s-5) 0 var(--s-6);
