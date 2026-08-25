@@ -1,28 +1,65 @@
+import logging
 import shutil
 import tempfile
 from pathlib import Path
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import Cookie, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from markitdown import MarkItDown
+from pydantic import BaseModel
+from starlette.responses import Response
 
+from .admin_auth import (
+    ADMIN_COOKIE,
+    clear_session_cookie,
+    is_valid_session_token,
+    set_session_cookie,
+    verify_password,
+)
 from .conversion import ConversionError, convert_file_to_markdown, save_upload_bytes
+from .stats import StatsStore
 
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 RESOURCE_DIR = BASE_DIR.parent / "resources"
 UPLOAD_DIR = Path(tempfile.gettempdir()) / "markitdown-web-uploads"
+STATS_PATH = BASE_DIR.parent / "data" / "stats.json"
+VISITOR_COOKIE = "mdw_vid"
+VISITOR_COOKIE_MAX_AGE = 31536000
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="文档转 Markdown")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/resources", StaticFiles(directory=RESOURCE_DIR), name="resources")
+stats_store = StatsStore(STATS_PATH)
+
+
+class AdminLoginBody(BaseModel):
+    password: str
+
+
+def _set_visitor_cookie(response: Response, visitor_id: str) -> None:
+    response.set_cookie(
+        key=VISITOR_COOKIE,
+        value=visitor_id,
+        max_age=VISITOR_COOKIE_MAX_AGE,
+        httponly=True,
+        samesite="lax",
+        path="/",
+    )
 
 
 @app.get("/")
 def index():
     return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/admin")
+def admin_page():
+    return FileResponse(STATIC_DIR / "admin.html")
 
 
 @app.get("/llm.txt")
@@ -45,8 +82,33 @@ def robots_txt():
     return FileResponse(RESOURCE_DIR / "robots.txt", media_type="text/plain; charset=utf-8")
 
 
+@app.post("/admin/login")
+def admin_login(body: AdminLoginBody, response: Response):
+    if not verify_password(body.password):
+        raise HTTPException(status_code=401, detail="密码错误")
+    set_session_cookie(response)
+    return {"ok": True}
+
+
+@app.post("/admin/logout")
+def admin_logout(response: Response):
+    clear_session_cookie(response)
+    return {"ok": True}
+
+
+@app.get("/api/admin/stats")
+def admin_stats(mdw_admin: str | None = Cookie(default=None, alias=ADMIN_COOKIE)):
+    if not is_valid_session_token(mdw_admin):
+        raise HTTPException(status_code=401, detail="未登录")
+    return stats_store.read()
+
+
 @app.post("/api/convert")
-async def convert(file: UploadFile = File(...)):
+async def convert(
+    response: Response,
+    file: UploadFile = File(...),
+    mdw_vid: str | None = Cookie(default=None, alias=VISITOR_COOKIE),
+):
     content = await file.read()
     saved_path = None
 
@@ -60,6 +122,13 @@ async def convert(file: UploadFile = File(...)):
             saved_path.unlink()
         if UPLOAD_DIR.exists() and not any(UPLOAD_DIR.iterdir()):
             shutil.rmtree(UPLOAD_DIR)
+
+    try:
+        result = stats_store.record_conversion(mdw_vid)
+        if result.should_set_cookie:
+            _set_visitor_cookie(response, result.visitor_id)
+    except Exception:
+        logger.exception("failed to record conversion stats")
 
     return {
         "filename": file.filename,
