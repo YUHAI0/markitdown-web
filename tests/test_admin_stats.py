@@ -83,6 +83,11 @@ class AdminStatsHttpTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("markdown", response.json())
 
+    def test_admin_page_is_public(self):
+        response = self.client.get("/admin")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("查看使用统计", response.text)
+
 
 if __name__ == "__main__":
     unittest.main()

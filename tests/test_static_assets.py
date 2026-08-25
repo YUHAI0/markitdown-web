@@ -180,6 +180,34 @@ class StaticAssetTests(unittest.TestCase):
         for path in files:
             self.assertNotIn("MarkItDown", path.read_text(encoding="utf-8"), str(path))
 
+    def test_homepage_does_not_link_to_admin(self):
+        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn('href="/admin"', html)
+        self.assertNotIn("查看使用统计", html)
+
+    def test_admin_page_has_login_and_stat_cards(self):
+        html = (PROJECT_ROOT / "app" / "static" / "admin.html").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+        js = (PROJECT_ROOT / "app" / "static" / "admin.js").read_text(encoding="utf-8")
+
+        self.assertIn("<title>使用统计</title>", html)
+        self.assertIn('id="password-input"', html)
+        self.assertIn('id="login-form"', html)
+        self.assertIn("查看使用统计", html)
+        self.assertIn('id="users-value"', html)
+        self.assertIn('id="documents-value"', html)
+        self.assertIn("使用人数", html)
+        self.assertIn("转换文档", html)
+        self.assertIn('id="logout-button"', html)
+        self.assertIn('id="theme-toggle"', html)
+        self.assertIn("/static/admin.js?v=", html)
+        self.assertIn("/admin/login", js)
+        self.assertIn("/api/admin/stats", js)
+        self.assertIn("toLocaleString(\"zh-CN\")", js)
+        self.assertIn(".admin-stats", css)
+        self.assertIn(".stat-card", css)
+        self.assertIn("grid-template-columns: 1fr 1fr", css)
+
 
 if __name__ == "__main__":
     unittest.main()

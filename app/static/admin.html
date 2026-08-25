@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>使用统计</title>
+  <link rel="icon" type="image/png" href="/resources/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/static/styles.css?v=20260825-1">
+</head>
+<body>
+  <div class="page admin-page">
+    <header class="topbar">
+      <a class="topbar-brand" href="/">
+        <span class="brand-mark" aria-hidden="true">¶</span>
+        <span class="brand-name">markitdown</span>
+      </a>
+      <nav class="topbar-meta" aria-label="管理导航">
+        <span class="admin-kicker" id="admin-label">管理</span>
+        <button class="meta-link" id="logout-button" type="button" hidden>退出</button>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换主题">
+          <span class="icon-sun" aria-hidden="true">☀</span>
+          <span class="icon-moon" aria-hidden="true">☾</span>
+        </button>
+      </nav>
+    </header>
+
+    <section class="admin-shell" id="login-panel">
+      <p class="eyebrow">Admin</p>
+      <h1>查看使用统计</h1>
+      <p class="summary">输入密码进入。此页不对外展示。</p>
+      <form class="admin-form" id="login-form">
+        <label class="admin-label" for="password-input">密码</label>
+        <input class="admin-input" id="password-input" name="password" type="password" autocomplete="current-password" required>
+        <button class="primary-button" type="submit">进入</button>
+        <p class="admin-error" id="login-error" hidden>密码错误</p>
+      </form>
+    </section>
+
+    <section class="admin-shell" id="stats-panel" hidden>
+      <p class="eyebrow">统计</p>
+      <h1>转换使用情况</h1>
+      <div class="admin-stats">
+        <article class="stat-card">
+          <p class="panel-label">使用人数</p>
+          <p class="stat-value" id="users-value">0</p>
+        </article>
+        <article class="stat-card">
+          <p class="panel-label">转换文档</p>
+          <p class="stat-value" id="documents-value">0</p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <script src="/static/admin.js?v=20260825-1"></script>
+</body>
+</html>
