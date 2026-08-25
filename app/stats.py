@@ -2,10 +2,22 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from uuid import UUID, uuid4
+
+
+def writable_stats_path(preferred: Path) -> Path:
+    try:
+        preferred.parent.mkdir(parents=True, exist_ok=True)
+        probe = preferred.parent / ".write-probe"
+        probe.write_text("ok", encoding="utf-8")
+        probe.unlink()
+        return preferred
+    except OSError:
+        return Path(tempfile.gettempdir()) / "markitdown-web-stats.json"
 
 
 def parse_visitor_id(value: str | None) -> str | None:
@@ -64,7 +76,10 @@ class StatsStore:
         self.lock_path = self.path.with_name(self.path.name + ".lock")
 
     def read(self) -> dict:
-        with _exclusive_lock(self.lock_path):
+        try:
+            with _exclusive_lock(self.lock_path):
+                return self._load_unlocked()
+        except OSError:
             return self._load_unlocked()
 
     def record_conversion(self, visitor_id: str | None) -> RecordResult:

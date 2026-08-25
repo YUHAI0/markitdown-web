@@ -73,6 +73,10 @@ class AdminStatsHttpTests(unittest.TestCase):
         response = self.client.get("/api/admin/stats")
         self.assertEqual(response.status_code, 401)
 
+    def test_admin_stats_alias_without_session_is_401(self):
+        response = self.client.get("/admin/stats")
+        self.assertEqual(response.status_code, 401)
+
     def test_stats_write_failure_does_not_fail_convert(self):
         class BrokenStore:
             def record_conversion(self, visitor_id):

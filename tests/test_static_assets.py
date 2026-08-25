@@ -202,7 +202,7 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn('id="theme-toggle"', html)
         self.assertIn("/static/admin.js?v=", html)
         self.assertIn("/admin/login", js)
-        self.assertIn("/api/admin/stats", js)
+        self.assertIn("/admin/stats", js)
         self.assertIn("toLocaleString(\"zh-CN\")", js)
         self.assertIn(".admin-stats", css)
         self.assertIn(".stat-card", css)

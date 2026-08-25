@@ -67,7 +67,7 @@ function showStats(payload) {
 }
 
 async function loadStats() {
-  const response = await fetch("/api/admin/stats");
+  const response = await fetch("/admin/stats");
   if (response.status === 401) {
     showLogin();
     return;

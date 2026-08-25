@@ -3,7 +3,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from fastapi import Cookie, FastAPI, File, HTTPException, UploadFile
+from fastapi import Cookie, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from markitdown import MarkItDown
@@ -18,7 +18,7 @@ from .admin_auth import (
     verify_password,
 )
 from .conversion import ConversionError, convert_file_to_markdown, save_upload_bytes
-from .stats import StatsStore
+from .stats import StatsStore, writable_stats_path
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="文档转 Markdown")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/resources", StaticFiles(directory=RESOURCE_DIR), name="resources")
-stats_store = StatsStore(STATS_PATH)
+stats_store = StatsStore(writable_stats_path(STATS_PATH))
 
 
 class AdminLoginBody(BaseModel):
@@ -96,11 +96,20 @@ def admin_logout(response: Response):
     return {"ok": True}
 
 
-@app.get("/api/admin/stats")
-def admin_stats(mdw_admin: str | None = Cookie(default=None, alias=ADMIN_COOKIE)):
-    if not is_valid_session_token(mdw_admin):
+def _admin_stats_payload(token: str | None) -> dict:
+    if not is_valid_session_token(token):
         raise HTTPException(status_code=401, detail="未登录")
-    return stats_store.read()
+    try:
+        return stats_store.read()
+    except Exception:
+        logger.exception("failed to read conversion stats")
+        return {"unique_users": 0, "documents": 0}
+
+
+@app.get("/admin/stats")
+@app.get("/api/admin/stats")
+def admin_stats(request: Request):
+    return _admin_stats_payload(request.cookies.get(ADMIN_COOKIE))
 
 
 @app.post("/api/convert")
