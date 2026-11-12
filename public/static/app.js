@@ -271,10 +271,17 @@ async function convertSelectedFile() {
       method: "POST",
       body: formData,
     });
-    const payload = await response.json();
+    const raw = await response.text();
+    let payload = {};
+    try {
+      payload = raw ? JSON.parse(raw) : {};
+    } catch {
+      throw new Error("转换服务暂时不可用，请稍后再试。");
+    }
 
     if (!response.ok) {
-      throw new Error(payload.detail || "转换失败，请换一个文件再试。");
+      const detail = Array.isArray(payload.detail) ? payload.detail[0]?.msg : payload.detail;
+      throw new Error(detail || "转换失败，请换一个文件再试。");
     }
 
     currentMarkdown = payload.markdown;
