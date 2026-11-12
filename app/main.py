@@ -24,7 +24,7 @@ from .stats import StatsStore, writable_stats_path
 BASE_DIR = Path(__file__).resolve().parent
 PUBLIC_DIR = BASE_DIR.parent / "public"
 STATIC_DIR = PUBLIC_DIR / "static"
-RESOURCE_DIR = BASE_DIR.parent / "resources"
+RESOURCE_DIR = PUBLIC_DIR / "resources"
 PAGE_CACHE_HEADERS = {
     "Cache-Control": "public, max-age=0, must-revalidate",
     "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
@@ -41,8 +41,10 @@ VISITOR_COOKIE_MAX_AGE = 31536000
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="文档转 Markdown")
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-app.mount("/resources", StaticFiles(directory=RESOURCE_DIR), name="resources")
+if STATIC_DIR.is_dir():
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+if RESOURCE_DIR.is_dir():
+    app.mount("/resources", StaticFiles(directory=RESOURCE_DIR), name="resources")
 stats_store = StatsStore(writable_stats_path(STATS_PATH))
 
 
@@ -74,7 +76,7 @@ def admin_page():
 @app.get("/llm.txt")
 def llm_txt():
     return FileResponse(
-        RESOURCE_DIR / "llm.txt",
+        PUBLIC_DIR / "llm.txt",
         media_type="text/plain; charset=utf-8",
         headers=TEXT_CACHE_HEADERS,
     )
@@ -83,7 +85,7 @@ def llm_txt():
 @app.get("/llm-full.txt")
 def llm_full_txt():
     return FileResponse(
-        RESOURCE_DIR / "llm-full.txt",
+        PUBLIC_DIR / "llm-full.txt",
         media_type="text/plain; charset=utf-8",
         headers=TEXT_CACHE_HEADERS,
     )
@@ -92,7 +94,7 @@ def llm_full_txt():
 @app.get("/api.md")
 def api_md():
     return FileResponse(
-        RESOURCE_DIR / "api.md",
+        PUBLIC_DIR / "api.md",
         media_type="text/plain; charset=utf-8",
         headers=TEXT_CACHE_HEADERS,
     )
@@ -101,7 +103,7 @@ def api_md():
 @app.get("/robots.txt")
 def robots_txt():
     return FileResponse(
-        RESOURCE_DIR / "robots.txt",
+        PUBLIC_DIR / "robots.txt",
         media_type="text/plain; charset=utf-8",
         headers=TEXT_CACHE_HEADERS,
     )

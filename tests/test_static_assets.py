@@ -144,17 +144,17 @@ class StaticAssetTests(unittest.TestCase):
         html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn('<link rel="icon" type="image/png" href="/resources/icon.png">', html)
-        self.assertTrue((PROJECT_ROOT / "resources" / "icon.png").is_file())
+        self.assertTrue((PROJECT_ROOT / "public" / "resources" / "icon.png").is_file())
 
     def test_text_resource_files_exist(self):
         for filename in ("api.md", "llm.txt", "llm-full.txt", "robots.txt"):
-            path = PROJECT_ROOT / "resources" / filename
+            path = PROJECT_ROOT / "public" / filename
             self.assertTrue(path.is_file(), f"{filename} should exist")
 
-        api = (PROJECT_ROOT / "resources" / "api.md").read_text(encoding="utf-8")
-        llm = (PROJECT_ROOT / "resources" / "llm.txt").read_text(encoding="utf-8")
-        llm_full = (PROJECT_ROOT / "resources" / "llm-full.txt").read_text(encoding="utf-8")
-        robots = (PROJECT_ROOT / "resources" / "robots.txt").read_text(encoding="utf-8")
+        api = (PROJECT_ROOT / "public" / "api.md").read_text(encoding="utf-8")
+        llm = (PROJECT_ROOT / "public" / "llm.txt").read_text(encoding="utf-8")
+        llm_full = (PROJECT_ROOT / "public" / "llm-full.txt").read_text(encoding="utf-8")
+        robots = (PROJECT_ROOT / "public" / "robots.txt").read_text(encoding="utf-8")
 
         self.assertIn("POST /api/convert", api)
         self.assertIn("# \u6587\u6863\u8f6c Markdown", llm)
@@ -166,8 +166,8 @@ class StaticAssetTests(unittest.TestCase):
         files = [
             PROJECT_ROOT / "README.md",
             PROJECT_ROOT / "public" / "index.html",
-            PROJECT_ROOT / "resources" / "llm.txt",
-            PROJECT_ROOT / "resources" / "llm-full.txt",
+            PROJECT_ROOT / "public" / "llm.txt",
+            PROJECT_ROOT / "public" / "llm-full.txt",
         ]
 
         for path in files:
