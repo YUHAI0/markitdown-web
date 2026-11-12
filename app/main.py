@@ -22,8 +22,17 @@ from .stats import StatsStore, writable_stats_path
 
 
 BASE_DIR = Path(__file__).resolve().parent
-STATIC_DIR = BASE_DIR / "static"
+PUBLIC_DIR = BASE_DIR.parent / "public"
+STATIC_DIR = PUBLIC_DIR / "static"
 RESOURCE_DIR = BASE_DIR.parent / "resources"
+PAGE_CACHE_HEADERS = {
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "CDN-Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+}
+TEXT_CACHE_HEADERS = {
+    "Cache-Control": "public, max-age=3600",
+    "CDN-Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+}
 UPLOAD_DIR = Path(tempfile.gettempdir()) / "markitdown-web-uploads"
 STATS_PATH = BASE_DIR.parent / "data" / "stats.json"
 VISITOR_COOKIE = "mdw_vid"
@@ -54,32 +63,48 @@ def _set_visitor_cookie(response: Response, visitor_id: str) -> None:
 
 @app.get("/")
 def index():
-    return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(PUBLIC_DIR / "index.html", headers=PAGE_CACHE_HEADERS)
 
 
 @app.get("/admin")
 def admin_page():
-    return FileResponse(STATIC_DIR / "admin.html")
+    return FileResponse(PUBLIC_DIR / "admin.html", headers=PAGE_CACHE_HEADERS)
 
 
 @app.get("/llm.txt")
 def llm_txt():
-    return FileResponse(RESOURCE_DIR / "llm.txt", media_type="text/plain; charset=utf-8")
+    return FileResponse(
+        RESOURCE_DIR / "llm.txt",
+        media_type="text/plain; charset=utf-8",
+        headers=TEXT_CACHE_HEADERS,
+    )
 
 
 @app.get("/llm-full.txt")
 def llm_full_txt():
-    return FileResponse(RESOURCE_DIR / "llm-full.txt", media_type="text/plain; charset=utf-8")
+    return FileResponse(
+        RESOURCE_DIR / "llm-full.txt",
+        media_type="text/plain; charset=utf-8",
+        headers=TEXT_CACHE_HEADERS,
+    )
 
 
 @app.get("/api.md")
 def api_md():
-    return FileResponse(RESOURCE_DIR / "api.md", media_type="text/plain; charset=utf-8")
+    return FileResponse(
+        RESOURCE_DIR / "api.md",
+        media_type="text/plain; charset=utf-8",
+        headers=TEXT_CACHE_HEADERS,
+    )
 
 
 @app.get("/robots.txt")
 def robots_txt():
-    return FileResponse(RESOURCE_DIR / "robots.txt", media_type="text/plain; charset=utf-8")
+    return FileResponse(
+        RESOURCE_DIR / "robots.txt",
+        media_type="text/plain; charset=utf-8",
+        headers=TEXT_CACHE_HEADERS,
+    )
 
 
 @app.post("/admin/login")

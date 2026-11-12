@@ -21,6 +21,32 @@ let selectedFile = null;
 let currentMarkdown = "";
 let activeView = "raw";
 let copyToastTimer = null;
+let previewLibsPromise = null;
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(`failed to load ${src}`));
+    document.head.appendChild(script);
+  });
+}
+
+function ensurePreviewLibs() {
+  if (!hasDocument) return Promise.resolve();
+  if (typeof marked !== "undefined" && typeof DOMPurify !== "undefined") {
+    return Promise.resolve();
+  }
+  if (!previewLibsPromise) {
+    previewLibsPromise = Promise.all([
+      loadScript("/static/vendor/marked.min.js?v=12.0.2"),
+      loadScript("/static/vendor/purify.min.js?v=3.1.6"),
+    ]);
+  }
+  return previewLibsPromise;
+}
 
 const THEME_KEY = "markitdown-web:theme";
 
@@ -170,6 +196,11 @@ function setOutputView(view) {
 
   if (isPreview) {
     renderPreview();
+    ensurePreviewLibs()
+      .then(() => {
+        if (activeView === "preview") renderPreview();
+      })
+      .catch(() => {});
   }
 }
 
@@ -225,6 +256,7 @@ async function convertSelectedFile() {
   const formData = new FormData();
   formData.append("file", selectedFile);
 
+  const previewReady = ensurePreviewLibs().catch(() => {});
   convertButton.disabled = true;
   copyButton.disabled = true;
   downloadButton.disabled = true;
@@ -247,6 +279,7 @@ async function convertSelectedFile() {
 
     currentMarkdown = payload.markdown;
     output.value = currentMarkdown;
+    await previewReady;
     renderPreview();
     resultMeta.textContent = `${payload.characters.toLocaleString("zh-CN")} 个字符`;
     copyButton.disabled = false;

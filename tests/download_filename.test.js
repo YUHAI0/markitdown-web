@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { markdownDownloadName } = require("../app/static/app.js");
+const { markdownDownloadName } = require("../public/static/app.js");
 
 assert.strictEqual(markdownDownloadName("report.pdf"), "report.md");
 assert.strictEqual(markdownDownloadName("archive.v1.docx"), "archive.v1.md");

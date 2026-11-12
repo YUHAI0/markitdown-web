@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { renderMarkdownPreview } = require("../app/static/app.js");
+const { renderMarkdownPreview } = require("../public/static/app.js");
 
 const html = renderMarkdownPreview("# Title\n\n<script>alert('xss')</script>\n\n**Bold**");
 

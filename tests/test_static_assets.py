@@ -23,18 +23,18 @@ def css_blocks_containing(css, selector):
 
 class StaticAssetTests(unittest.TestCase):
     def test_app_script_uses_cache_busting_version(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn('/static/app.js?v=', html)
 
     def test_footer_links_to_markitdown_project(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn("\u672c\u7ad9\u70b9\u6765\u6e90\u4e8e markitdown \u9879\u76ee", html)
         self.assertIn("https://github.com/microsoft/markitdown", html)
 
     def test_topbar_links_to_api_document_with_agent_hint(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn('class="api-link-wrap topbar-api"', html)
         self.assertIn('href="/api.md"', html)
@@ -42,38 +42,28 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("Agent", html)
 
     def test_footer_does_not_duplicate_api_document_link(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
         footer = html.split('<footer class="site-footer">', 1)[1].split('</footer>', 1)[0]
 
         self.assertNotIn('href="/api.md"', footer)
         self.assertNotIn("API 文档", footer)
 
-    def test_google_analytics_tag_is_present(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+    def test_homepage_does_not_load_google_ads_analytics_or_fonts(self):
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "public" / "static" / "styles.css").read_text(encoding="utf-8")
 
-        self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-B6SVPJRB5M", html)
-        self.assertIn("gtag('config', 'G-B6SVPJRB5M');", html)
-
-    def test_google_adsense_fixed_topbar_ad_is_present_without_flow_placeholder(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
-        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
-
-        self.assertIn("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2123583038977344", html)
-        self.assertIn("crossorigin=\"anonymous\"", html)
-        self.assertIn('class="topbar-ad"', html)
-        self.assertIn('class="adsbygoogle topbar-adsense"', html)
-        self.assertIn('style="display:inline-block;width:320px;height:50px"', html)
-        self.assertIn('data-ad-client="ca-pub-2123583038977344"', html)
-        self.assertIn('data-ad-slot="6425951311"', html)
-        self.assertIn("(adsbygoogle = window.adsbygoogle || []).push({});", html)
-        self.assertIn(".topbar-ad", css)
-        self.assertIn("position: absolute;", css)
-        self.assertIn("width: 320px;", css)
-        self.assertIn("height: 50px;", css)
-        self.assertIn("@media (max-width: 1120px)", css)
+        self.assertNotIn("googletagmanager.com", html)
+        self.assertNotIn("pagead2.googlesyndication.com", html)
+        self.assertNotIn("adsbygoogle", html)
+        self.assertNotIn("fonts.googleapis.com", html)
+        self.assertNotIn("fonts.gstatic.com", html)
+        self.assertNotIn("fonts.googleapis.com", css)
+        self.assertNotIn("@import", css)
+        self.assertIn("PingFang SC", css)
+        self.assertIn("Microsoft YaHei", css)
 
     def test_homepage_uses_chinese_document_title_and_heading(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
 
         chinese_title = "\u6587\u6863\u8f6c Markdown"
 
@@ -83,7 +73,7 @@ class StaticAssetTests(unittest.TestCase):
         self.assertNotIn("markitdown Web", html)
 
     def test_result_panel_has_raw_and_preview_modes(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn('id="raw-view-button"', html)
         self.assertIn('data-view="raw"', html)
@@ -93,11 +83,14 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn('id="preview-view-button" type="button" data-view="preview" aria-pressed="false"', html)
         self.assertIn('id="markdown-output" spellcheck="false" readonly', html)
         self.assertIn('id="markdown-preview" hidden aria-live="polite"', html)
-        self.assertIn("/static/vendor/marked.min.js", html)
-        self.assertIn("/static/vendor/purify.min.js", html)
+        js = (PROJECT_ROOT / "public" / "static" / "app.js").read_text(encoding="utf-8")
+        self.assertNotIn("/static/vendor/marked.min.js", html)
+        self.assertNotIn("/static/vendor/purify.min.js", html)
+        self.assertIn("/static/vendor/marked.min.js", js)
+        self.assertIn("/static/vendor/purify.min.js", js)
 
     def test_status_text_is_visually_hidden(self):
-        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "public" / "static" / "styles.css").read_text(encoding="utf-8")
 
         status_css = css_block(css, ".status")
 
@@ -105,7 +98,7 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("clip-path: inset(50%);", status_css)
 
     def test_preview_scrolls_inside_fixed_result_body(self):
-        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "public" / "static" / "styles.css").read_text(encoding="utf-8")
         workspace_css = css_block(css, ".workspace")
         output_body_css = css_block(css, ".output-body")
         output_panel_blocks = "\n".join(css_blocks_containing(css, ".output-panel"))
@@ -120,9 +113,9 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("overflow: auto;", markdown_preview_blocks)
 
     def test_result_panel_has_conversion_progress_bar(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
-        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
-        js = (PROJECT_ROOT / "app" / "static" / "app.js").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "public" / "static" / "styles.css").read_text(encoding="utf-8")
+        js = (PROJECT_ROOT / "public" / "static" / "app.js").read_text(encoding="utf-8")
 
         self.assertIn('id="conversion-progress"', html)
         self.assertIn('role="progressbar"', html)
@@ -133,9 +126,9 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("setProgress(false)", js)
 
     def test_copy_button_has_toast_feedback(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
-        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
-        js = (PROJECT_ROOT / "app" / "static" / "app.js").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "public" / "static" / "styles.css").read_text(encoding="utf-8")
+        js = (PROJECT_ROOT / "public" / "static" / "app.js").read_text(encoding="utf-8")
 
         self.assertIn('id="copy-toast"', html)
         self.assertIn('role="status"', html)
@@ -148,7 +141,7 @@ class StaticAssetTests(unittest.TestCase):
         self.assertIn("copyToastTimer", js)
 
     def test_site_icon_uses_resource_icon(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn('<link rel="icon" type="image/png" href="/resources/icon.png">', html)
         self.assertTrue((PROJECT_ROOT / "resources" / "icon.png").is_file())
@@ -172,7 +165,7 @@ class StaticAssetTests(unittest.TestCase):
     def test_public_site_copy_uses_lowercase_markitdown(self):
         files = [
             PROJECT_ROOT / "README.md",
-            PROJECT_ROOT / "app" / "static" / "index.html",
+            PROJECT_ROOT / "public" / "index.html",
             PROJECT_ROOT / "resources" / "llm.txt",
             PROJECT_ROOT / "resources" / "llm-full.txt",
         ]
@@ -181,14 +174,14 @@ class StaticAssetTests(unittest.TestCase):
             self.assertNotIn("MarkItDown", path.read_text(encoding="utf-8"), str(path))
 
     def test_homepage_does_not_link_to_admin(self):
-        html = (PROJECT_ROOT / "app" / "static" / "index.html").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
         self.assertNotIn('href="/admin"', html)
         self.assertNotIn("查看使用统计", html)
 
     def test_admin_page_has_login_and_stat_cards(self):
-        html = (PROJECT_ROOT / "app" / "static" / "admin.html").read_text(encoding="utf-8")
-        css = (PROJECT_ROOT / "app" / "static" / "styles.css").read_text(encoding="utf-8")
-        js = (PROJECT_ROOT / "app" / "static" / "admin.js").read_text(encoding="utf-8")
+        html = (PROJECT_ROOT / "public" / "admin.html").read_text(encoding="utf-8")
+        css = (PROJECT_ROOT / "public" / "static" / "styles.css").read_text(encoding="utf-8")
+        js = (PROJECT_ROOT / "public" / "static" / "admin.js").read_text(encoding="utf-8")
 
         self.assertIn("<title>使用统计</title>", html)
         self.assertIn('id="password-input"', html)
