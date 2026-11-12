@@ -32,6 +32,8 @@ class StaticAssetTests(unittest.TestCase):
 
         self.assertIn("\u672c\u7ad9\u70b9\u6765\u6e90\u4e8e markitdown \u9879\u76ee", html)
         self.assertIn("https://github.com/microsoft/markitdown", html)
+        self.assertIn('href="https://yuhai.me"', html)
+        self.assertIn("\u8054\u7cfb\u7ad9\u957f", html)
 
     def test_topbar_links_to_api_document_with_agent_hint(self):
         html = (PROJECT_ROOT / "public" / "index.html").read_text(encoding="utf-8")
